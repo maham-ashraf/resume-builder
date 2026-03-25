@@ -13,11 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const experienceTemplate = document.getElementById('experience-form-template');
     const educationTemplate = document.getElementById('education-form-template');
 
-    // --- State ---
     let resumeData = {
         template: 'template-modern',
         themeColor: '#3b82f6',
-        personal: { fullName: '', jobTitle: '', email: '', phone: '', address: '', summary: '' },
+        personal: { fullName: '', jobTitle: '', email: '', phone: '', address: '', summary: '', profileImage: '' },
         skills: '',
         experiences: [],
         educations: []
@@ -73,6 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('phone').value = resumeData.personal.phone;
         document.getElementById('address').value = resumeData.personal.address;
         document.getElementById('summary').value = resumeData.personal.summary;
+        const removeImgBtn = document.getElementById('remove-img-btn');
+        if (resumeData.personal.profileImage) {
+            removeImgBtn.style.display = 'block';
+        } else {
+            removeImgBtn.style.display = 'none';
+        }
         document.getElementById('skills').value = resumeData.skills;
         experienceContainer.innerHTML = '';
         resumeData.experiences.forEach(exp => addExperienceForm(exp));
@@ -125,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resumeData.personal.address = document.getElementById('address').value;
             resumeData.personal.summary = document.getElementById('summary').value;
             resumeData.skills = document.getElementById('skills').value;
+            // Profile image is handled separately by file listener
             resumeData.experiences = Array.from(experienceContainer.querySelectorAll('.dynamic-entry')).map(block => ({
                 id: block.dataset.id,
                 title: block.querySelector('.exp-title').value,
@@ -154,8 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const skillsArray = resumeData.skills.split(',').map(s => s.trim()).filter(Boolean);
 
         if (resumeData.template === 'template-modern') {
+            const profileImgHtml = personal.profileImage ? `<img src="${personal.profileImage}" class="resume-profile-img">` : '';
             previewContainer.innerHTML = `
                 <div class="mod-left">
+                    ${profileImgHtml}
                     <h1 class="m-name">${personal.fullName || 'Full Name'}</h1>
                     <div class="m-title">${personal.jobTitle || 'Job Title'}</div>
                     <div class="m-section-title">Contact</div>
@@ -221,6 +229,27 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#resume-form input, #resume-form textarea, #resume-form select, .theme-color-input').forEach(el => {
         el.addEventListener('input', updateDataFromForm);
         el.addEventListener('change', updateDataFromForm);
+    });
+
+    document.getElementById('profileImage').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 1024 * 500) { alert('Image too large (max 500KB)'); return; }
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                resumeData.personal.profileImage = event.target.result;
+                document.getElementById('remove-img-btn').style.display = 'block';
+                updateDataFromForm();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('remove-img-btn').addEventListener('click', () => {
+        resumeData.personal.profileImage = '';
+        document.getElementById('profileImage').value = '';
+        document.getElementById('remove-img-btn').style.display = 'none';
+        updateDataFromForm();
     });
 
     addExperienceBtn.addEventListener('click', () => { addExperienceForm(); updateDataFromForm(); });
