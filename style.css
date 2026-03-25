@@ -166,8 +166,9 @@ body {
 }
 
 /* TEMPLATES */
-.t-bullet-list { margin-top: 6px; padding-left: 18px; }
-.t-bullet-list li { margin-bottom: 4px; }
+.t-bullet-list { margin-top: 6px; padding-left: 18px; list-style-type: disc; }
+.t-bullet-list li { margin-bottom: 6px; padding-left: 4px; }
+.t-bullet-list li::marker { color: var(--theme-color); font-size: 1.1em; }
 
 /* 1. MODERN */
 .template-modern { display: flex; height: 100%; }
@@ -179,20 +180,42 @@ body {
 .template-modern .mod-left .m-section-title { border-color: rgba(255,255,255,0.2); margin-top: 30px; }
 .template-modern .mod-right .m-section-title { border-color: var(--theme-color); color: var(--theme-color); margin-top: 30px; }
 .template-modern .m-item-subtitle { font-weight: 600; color: var(--theme-color); margin-bottom: 8px; }
-.template-modern .m-contact-item { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; font-size: 0.85rem; }
+.template-modern .m-contact-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-bottom: 15px; 
+    font-size: 0.85rem; 
+    word-break: break-word; /* Prevents overflow */
+    overflow-wrap: anywhere;
+}
 .template-modern .m-skills span { display: block; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 4px; margin-bottom: 8px; font-size: 0.85rem; }
 
 /* 2. CLASSIC */
 .template-classic { background: white; }
 .template-classic .c-header { text-align: center; padding: 40px; background-color: var(--theme-color); color: white; }
 .template-classic .c-name { font-size: 2.5rem; font-weight: 700; }
-.template-classic .c-contact { display: flex; justify-content: center; gap: 15px; padding-top: 15px; font-size: 0.9rem; opacity: 0.9; }
+.template-classic .c-contact { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    padding-top: 15px; 
+    font-size: 0.9rem; 
+    opacity: 0.9; 
+    flex-wrap: wrap; 
+    word-break: break-word;
+}
 .template-classic .c-body { padding: 40px; }
 .template-classic .c-section-title { font-size: 1.2rem; font-weight: 700; color: var(--theme-color); border-bottom: 2px solid var(--theme-color); margin-bottom: 15px; }
 
 /* 3. DARK */
 .template-dark { background: #0f172a; color: #e2e8f0; }
-.template-dark .d-header { background: var(--theme-color); padding: 40px; color: white; }
+.template-dark .d-header { 
+    background: var(--theme-color); 
+    padding: 40px; 
+    color: white; 
+    word-break: break-word;
+}
 .template-dark .d-body { padding: 40px; display: flex; gap: 30px; }
 .template-dark .d-section-title { color: white; border-bottom: 2px solid var(--theme-color); margin-bottom: 15px; padding-bottom: 5px; }
 .template-dark .d-item-company { color: var(--theme-color); font-weight: 600; }

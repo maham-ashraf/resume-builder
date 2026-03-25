@@ -32,9 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let inList = false;
         lines.forEach(line => {
             let l = line.trim();
-            if (l.startsWith('- ') || l.startsWith('* ') || l.startsWith('• ')) {
+            // Match lines starting with -, *, or • (with or without a following space)
+            if (l.match(/^[-*•]\s?/)) {
                 if (!inList) { html += '<ul class="t-bullet-list">'; inList = true; }
-                html += `<li>${l.substring(2).trim()}</li>`;
+                // Remove the bullet marker and any single leading space
+                const content = l.replace(/^[-*•]\s?/, '').trim();
+                if (content) html += `<li>${content}</li>`;
             } else {
                 if (inList) { html += '</ul>'; inList = false; }
                 if (l.length > 0) html += `<div>${l}</div>`;
@@ -62,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveData() { localStorage.setItem('resumeData', JSON.stringify(resumeData)); }
 
     function populateForm() {
-        templateSelector.value = resumeData.template;
+        if (templateSelector) templateSelector.value = resumeData.template;
         colorPicker.value = resumeData.themeColor;
         document.getElementById('fullName').value = resumeData.personal.fullName;
         document.getElementById('jobTitle').value = resumeData.personal.jobTitle;
@@ -113,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateDataFromForm() {
         clearTimeout(updateTimeout);
         updateTimeout = setTimeout(() => {
-            resumeData.template = templateSelector.value;
+            if (templateSelector) resumeData.template = templateSelector.value;
             resumeData.themeColor = colorPicker.value;
             resumeData.personal.fullName = document.getElementById('fullName').value;
             resumeData.personal.jobTitle = document.getElementById('jobTitle').value;
